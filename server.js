@@ -23,7 +23,7 @@ const app = express();
 app.use(express.json());
 
 // start the server
-app.listen(port, () => {
+app.listen(PORT, () => {
   console.log("Server running on port", PORT);
 });
 
