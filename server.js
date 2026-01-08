@@ -74,11 +74,9 @@ app.put("/updatecard/:id", async (req, res) => {
       .json({ message: "Card " + card_name + " updated successfully" });
   } catch (err) {
     console.error(err);
-    res
-      .status(500)
-      .json({
-        message: "Server error - could not update card with id: " + card_id,
-      });
+    res.status(500).json({
+      message: "Server error - could not update card with id: " + card_id,
+    });
   }
 });
 
@@ -90,17 +88,29 @@ app.delete("/deletecard/:id", async (req, res) => {
     await connection.execute("DELETE FROM defaultdb.cards WHERE id=?", [
       card_id,
     ]);
-    res
-      .status(201)
-      .json({
-        message: "Card with card id: " + card_id + ", deleted successfully",
-      });
+    res.status(201).json({
+      message: "Card with card id: " + card_id + ", deleted successfully",
+    });
   } catch (err) {
     console.error(err);
+    res.status(500).json({
+      message: "Server error - could not delete card with id: " + card_id,
+    });
+  }
+});
+
+app.get("/cards/:id", async (req, res) => {
+  const cardId = parseInt(req.params.id);
+  try {
+    const connection = await mysql.createConnection(dbConfig);
+    const [rows] = await connection.execute(
+      "SELECT * FROM defaultdb.cards WHERE cardid = ?",
+      [cardId]
+    );
+    res.json(rows);
+  } catch (err) {
     res
       .status(500)
-      .json({
-        message: "Server error - could not delete card with id: " + card_id,
-      });
+      .json({ message: "Failed to fetch card with id: " + cardId });
   }
 });
