@@ -16,7 +16,7 @@ https://onlinecardappwebservice-e28v.onrender.com/allcards
 | Method | Route             | Description               |
 | -----: | ----------------- | ------------------------- |
 |    GET | `/allcards`       | Fetch all items           |
-|    GET | `/cards/:id`      | Fetch a single item by ID |
+|    GET | `/card/:id`       | Fetch a single item by ID |
 |   POST | `/addcard`        | Create a new item         |
 |    PUT | `/updatecard/:id` | Update an existing item   |
 | DELETE | `/deletecard/:id` | Delete an item            |

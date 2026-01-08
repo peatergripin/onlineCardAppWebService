@@ -99,12 +99,12 @@ app.delete("/deletecard/:id", async (req, res) => {
   }
 });
 
-app.get("/cards/:id", async (req, res) => {
+app.get("/card/:id", async (req, res) => {
   const cardId = parseInt(req.params.id);
   try {
     const connection = await mysql.createConnection(dbConfig);
     const [rows] = await connection.execute(
-      "SELECT * FROM defaultdb.cards WHERE cardid = ?",
+      "SELECT * FROM defaultdb.cards WHERE id = ?",
       [cardId]
     );
     res.json(rows);
