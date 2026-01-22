@@ -26,7 +26,27 @@ app.use(express.json());
 app.listen(PORT, () => {
   console.log("Server running on port", PORT);
 });
-
+const cors = require("cors");
+const allowedOrigins = [
+  "http://localhost:3000",
+  // "https://YOUR-frontend.vercel.app", // add later
+  // "https://YOUR-frontend.onrender.com" // add later
+];
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // allow requests with no origin (Postman/server-to-server)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: false,
+  }),
+);
 // Example Route: Get all cards
 app.get("/allcards", async (req, res) => {
   try {
@@ -46,7 +66,7 @@ app.post("/addcard", async (req, res) => {
     let connection = await mysql.createConnection(dbConfig);
     await connection.execute(
       "INSERT INTO defaultdb.cards (card_name, card_pic) VALUES (?,?)",
-      [card_name, card_pic]
+      [card_name, card_pic],
     );
     res
       .status(201)
@@ -67,7 +87,7 @@ app.put("/updatecard/:id", async (req, res) => {
     let connection = await mysql.createConnection(dbConfig);
     await connection.execute(
       "UPDATE defaultdb.cards SET card_name=? card_pic=? WHERE id=?",
-      [card_name, card_pic, card_id]
+      [card_name, card_pic, card_id],
     );
     res
       .status(201)
@@ -105,7 +125,7 @@ app.get("/card/:id", async (req, res) => {
     const connection = await mysql.createConnection(dbConfig);
     const [rows] = await connection.execute(
       "SELECT * FROM defaultdb.cards WHERE id = ?",
-      [cardId]
+      [cardId],
     );
     res.json(rows);
   } catch (err) {
